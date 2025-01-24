@@ -208,23 +208,21 @@
         </div>
     </section>
 
-<!-- Instagram Carousel Section -->
+    <!-- Instagram Carousel Section -->
 <section class="instagram-carousel" id="instagram-carousel">
     <h2>Follow Us on Instagram</h2>
     <p>Stay updated with our latest projects and designs.</p>
 
     <div class="carousel-container">
         <div class="carousel-slide">
-            <!-- Instagram Embed 1 -->
+            <!-- Instagram Embeds (8 items as an example) -->
             <iframe src="https://www.instagram.com/p/xxxxxxxxxx/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-
-            <!-- Instagram Embed 2 -->
             <iframe src="https://www.instagram.com/p/xxxxxxxxxx/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-
-            <!-- Instagram Embed 3 -->
             <iframe src="https://www.instagram.com/p/xxxxxxxxxx/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
-
-            <!-- Instagram Embed 4 -->
+            <iframe src="https://www.instagram.com/p/xxxxxxxxxx/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            <iframe src="https://www.instagram.com/p/xxxxxxxxxx/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            <iframe src="https://www.instagram.com/p/xxxxxxxxxx/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
+            <iframe src="https://www.instagram.com/p/xxxxxxxxxx/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
             <iframe src="https://www.instagram.com/p/xxxxxxxxxx/embed" width="400" height="480" frameborder="0" scrolling="no" allowtransparency="true"></iframe>
         </div>
     </div>
@@ -233,17 +231,18 @@
 </section>
 
 <style>
+    /* General styles */
     .instagram-carousel {
         background-color: #f9f9f9;
         padding: 2rem;
         text-align: center;
         margin-top: 2rem;
-        position: relative; /* Make sure the buttons are positioned correctly */
+        position: relative;
     }
 
     .carousel-container {
         position: relative;
-        width: 80%;
+        width: 90%;
         margin: 0 auto;
         overflow: hidden;
     }
@@ -256,13 +255,15 @@
     .carousel-slide iframe {
         border-radius: 8px;
         margin-right: 10px;
+        flex: 0 0 calc(25% - 10px); /* Default to 4 items per slide */
     }
 
     /* Arrow buttons style */
-    .carousel-prev, .carousel-next {
-        background-color: #000; /* Black background */
-        color: white; /* White arrow color */
-        font-size: 24px; /* Adjust arrow size */
+    .carousel-prev,
+    .carousel-next {
+        background-color: black;
+        color: white;
+        font-size: 24px;
         border: none;
         cursor: pointer;
         position: absolute;
@@ -270,26 +271,84 @@
         transform: translateY(-50%);
         padding: 10px;
         transition: background-color 0.3s ease;
-        border-radius: 50%; /* Circular button */
+        border-radius: 50%;
     }
 
-    /* Position the buttons */
     .carousel-prev {
-        left: 10px; /* Left position */
+        left: 10px;
     }
 
     .carousel-next {
-        right: 10px; /* Right position */
+        right: 10px;
     }
 
-    /* Hover effect */
-    .carousel-prev:hover, .carousel-next:hover {
-        background-color: #e4405f; /* Hover to Instagram-like color */
+    .carousel-prev:hover,
+    .carousel-next:hover {
+        background-color: #e4405f; /* Instagram-like color on hover */
     }
 
-    /* FontAwesome icon size */
-    .carousel-prev i, .carousel-next i {
-        font-size: 24px; /* Adjust icon size */
+    .carousel-prev i,
+    .carousel-next i {
+        font-size: 24px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .carousel-slide iframe {
+            flex: 0 0 100%; /* One item per slide for general mobile */
+        }
+
+        .carousel-prev,
+        .carousel-next {
+            background-color: black; /* Black arrows for mobile */
+        }
+
+        .carousel-prev {
+            left: 5px;
+        }
+
+        .carousel-next {
+            right: 5px;
+        }
+    }
+
+    @media (max-width: 412px) {
+        .carousel-slide iframe {
+            flex: 0 0 100%; /* Explicitly ensure 1 item per slide for 412px width */
+            margin: auto;
+        }
+
+        .carousel-prev,
+        .carousel-next {
+            background-color: black; /* Black arrows for 412px width */
+        }
+    }
+    @media (max-width: 360px) {
+        .carousel-slide iframe {
+            flex: 0 0 80%; /* Explicitly ensure 1 item per slide for 412px width */
+            margin: auto;
+        }
+
+        .carousel-prev,
+        .carousel-next {
+            background-color: black; /* Black arrows for 412px width */
+        }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .carousel-slide iframe {
+            flex: 0 0 calc(50% - 10px); /* Two items per slide for tablets */
+            margin: auto;
+
+        }
+    }
+
+    @media (min-width: 1025px) {
+        .carousel-slide iframe {
+            flex: 0 0 calc(25% - 10px); /* Four items per slide for larger screens */
+            margin: auto;
+
+        }
     }
 </style>
 
@@ -297,23 +356,34 @@
     let currentSlide = 0;
 
     const slides = document.querySelectorAll('.carousel-slide iframe');
-    const totalSlides = slides.length;
+    const slideContainer = document.querySelector('.carousel-slide');
+
+    function updateCarousel() {
+        const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+        const itemsPerSlide = containerWidth <= 412 ? 1 : containerWidth < 768 ? 1 : containerWidth < 1025 ? 2 : 4;
+        const slideWidth = containerWidth / itemsPerSlide;
+        slideContainer.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+    }
 
     document.querySelector('.carousel-next').addEventListener('click', () => {
-        currentSlide = (currentSlide + 1) % totalSlides;
+        const containerWidth = document.querySelector('.carousel-container').offsetWidth;
+        const itemsPerSlide = containerWidth <= 412 ? 1 : containerWidth < 768 ? 1 : containerWidth < 1025 ? 2 : 4;
+
+        currentSlide = Math.min(currentSlide + 1, Math.ceil(slides.length / itemsPerSlide) - 1);
         updateCarousel();
     });
 
     document.querySelector('.carousel-prev').addEventListener('click', () => {
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        currentSlide = Math.max(currentSlide - 1, 0);
         updateCarousel();
     });
 
-    function updateCarousel() {
-        document.querySelector('.carousel-slide').style.transform = `translateX(-${currentSlide * 420}px)`;
-    }
-</script>
+    // Update carousel on window resize
+    window.addEventListener('resize', updateCarousel);
 
+    // Initialize carousel
+    updateCarousel();
+</script>
 
 <!-- to add instafeed -->
 <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/instafeed.js"></script>
